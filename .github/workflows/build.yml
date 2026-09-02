@@ -1,0 +1,54 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Unzip project (if a zip is sitting anywhere in the repo)
+        run: |
+          shopt -s nullglob globstar
+          for f in **/*.zip; do
+            echo "Unzipping $f"
+            unzip -o "$f" -d "$(dirname "$f")"
+          done
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
+      - name: Locate project root
+        id: locate
+        run: |
+          DIR=$(find . -maxdepth 6 -name "settings.gradle" -not -path "*/.git/*" | head -n1 | xargs -r dirname)
+          if [ -z "$DIR" ]; then
+            echo "::error::Could not find settings.gradle anywhere in the repo. Files present:"
+            find . -maxdepth 4 -type f -not -path "*/.git/*"
+            exit 1
+          fi
+          echo "Found Android project at: $DIR"
+          echo "dir=$DIR" >> "$GITHUB_OUTPUT"
+
+      - name: Build debug APK
+        working-directory: ${{ steps.locate.outputs.dir }}
+        run: gradle assembleDebug --no-daemon
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ALPHA-INJECTIOR-apk
+          path: '**/app/build/outputs/apk/debug/*.apk'

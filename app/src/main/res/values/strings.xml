@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">ALPHA INJECTIOR</string>
+    <string name="subtitle">Open your favorite chat apps instantly</string>
+    <string name="btn_whatsapp">WhatsApp</string>
+    <string name="btn_telegram">Telegram</string>
+    <string name="btn_discord">Discord</string>
+    <string name="refresh">Refresh page</string>
+    <string name="desktop_on">Desktop: ON</string>
+    <string name="desktop_off">Desktop: OFF</string>
+    <string name="desktop_toggle">Toggle desktop site</string>
+    <string name="debug_button">Show debug log</string>
+</resources>

@@ -1,0 +1,8 @@
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#33D4AF37">
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/card_alt" />
+        </shape>
+    </item>
+</ripple>
